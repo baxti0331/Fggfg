@@ -10,7 +10,11 @@ bot = telebot.TeleBot(API_TOKEN)
 app = Flask(__name__)
 
 WEBHOOK_URL_BASE = 'https://fggfg.onrender.com'
-WEBHOOK_URL_PATH = f"/{API_TOKEN}"
+WEBHOOK_URL_PATH = f"/{API_TOKEN}/"
+
+# Установка вебхука сразу при старте кода
+bot.remove_webhook()
+bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH)
 
 @app.route("/")
 def home():
@@ -34,8 +38,3 @@ def handle_message(message):
     bot.send_message(message.chat.id, "Как у тебя дела?")
     bot.send_message(message.chat.id, "Если нужно, пиши ещё!")
     bot.send_message(message.chat.id, "Хорошего дня!")
-
-if __name__ == '__main__':
-    bot.remove_webhook()
-    bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH)
-    app.run(host="0.0.0.0", port=8080)
