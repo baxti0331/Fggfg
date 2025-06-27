@@ -9,8 +9,8 @@ if not API_TOKEN:
 bot = telebot.TeleBot(API_TOKEN)
 app = Flask(__name__)
 
-WEBHOOK_URL_BASE = 'https://fggfg.onrender.com'  # твой домен
-WEBHOOK_URL_PATH = f"/{API_TOKEN}/"
+WEBHOOK_URL_BASE = 'https://fggfg.onrender.com'
+WEBHOOK_URL_PATH = f"/{API_TOKEN}"
 
 @app.route("/")
 def home():
