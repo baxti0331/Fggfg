@@ -10,7 +10,7 @@ bot = telebot.TeleBot(API_TOKEN)
 app = Flask(__name__)
 
 clean_token = API_TOKEN.replace(':', '')
-WEBHOOK_URL_BASE ='https://fggfg-1.onrender.com'
+WEBHOOK_URL_BASE = 'https://fggfg-1.onrender.com'  # замени на свой URL Render
 WEBHOOK_URL_PATH = f"/{clean_token}/"
 
 @app.route('/')
@@ -21,15 +21,25 @@ def index():
 def webhook():
     if request.headers.get('content-type') == 'application/json':
         json_string = request.get_data().decode('utf-8')
+        print(f"Получен запрос: {json_string}")
         update = telebot.types.Update.de_json(json_string)
-        bot.process_new_updates([update])
-        return '', 200
+        try:
+            bot.process_new_updates([update])
+            print("Апдейт обработан успешно")
+        except Exception as e:
+            print(f"Ошибка при обработке апдейта: {e}")
+        return 'OK', 200
     else:
         abort(403)
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    bot.send_message(message.chat.id, "Привет! Я бот на вебхуках!")
+    print(f"Команда /start от пользователя {message.chat.id}")
+    try:
+        bot.send_message(message.chat.id, "Привет! Я бот на вебхуках с логами.")
+        print("Ответ отправлен успешно")
+    except Exception as e:
+        print(f"Ошибка при отправке сообщения: {e}")
 
 if __name__ == '__main__':
     print("Удаляю старый вебхук...")
@@ -40,4 +50,4 @@ if __name__ == '__main__':
         print("Вебхук успешно установлен.")
     else:
         print("Ошибка при установке вебхука.")
-    # Не запускаем app.run(), чтобы gunicorn мог управлять сервером
+    # app.run() не нужен, gunicorn будет запускать сервер
