@@ -21,5 +21,5 @@ def send_welcome(message):
 
 if __name__ == '__main__':
     bot.remove_webhook()
-    bot.set_webhook(url=f"https://fggfg.onrender.com{WEBHOOK_URL_PATH}")
+    bot.set_webhook(url=f"https://render-webhuk-test.onrender.com{WEBHOOK_URL_PATH}")
     app.run(host="0.0.0.0", port=8080)
