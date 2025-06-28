@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 # Убираем двоеточие из токена в URL пути
 clean_token = API_TOKEN.replace(':', '')
-WEBHOOK_URL_BASE = 'https://fggfg.onrender.com# Замените на свой URL
+WEBHOOK_URL_BASE = 'https://fggfg.onrender.com'# Замените на свой URL
 WEBHOOK_URL_PATH = f"/{clean_token}/"
 
 @app.route('/')
