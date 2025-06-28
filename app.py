@@ -1,18 +1,23 @@
 import os
 import telebot
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 from flask import Flask, request, abort
 
 API_TOKEN = os.getenv('API_TOKEN')
+if not API_TOKEN:
+    raise RuntimeError("Ошибка: переменная окружения API_TOKEN не установлена")
+
 bot = telebot.TeleBot(API_TOKEN)
 app = Flask(__name__)
 
+# Убираем двоеточие из токена в URL пути
 clean_token = API_TOKEN.replace(':', '')
-WEBHOOK_URL_BASE = 'https://fggfg-1.onrender.com'
+WEBHOOK_URL_BASE = ''  # Замените на свой URL
 WEBHOOK_URL_PATH = f"/{clean_token}/"
 
 @app.route('/')
 def index():
-    return "Бот работает!"
+    return "Бот запущен и готов к работе!"
 
 @app.route(WEBHOOK_URL_PATH, methods=['POST'])
 def webhook():
@@ -24,15 +29,31 @@ def webhook():
     else:
         abort(403)
 
+# Обработчик команды /start
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    bot.send_message(message.chat.id, "Привет! Я бот на вебхуках!")
+    markup = InlineKeyboardMarkup()
+    web_app_url = "https://ваше-сайт-приложение.com"  # Замените на свой URL
 
-@bot.message_handler(func=lambda message: True)
-def echo_all(message):
-    bot.send_message(message.chat.id, f"Ты написал: {message.text}")
+    web_app_button = InlineKeyboardButton(
+        text="Открыть веб-приложение",
+        web_app=WebAppInfo(url=web_app_url)
+    )
+    markup.add(web_app_button)
+
+    bot.send_message(message.chat.id, "Привет! Я бот на вебхуках! Вот кнопка для открытия веб-приложения:", reply_markup=markup)
+
+# Обработчик нажатия других кнопок
+@bot.callback_query_handler(func=lambda call: call.data == "button_click")
+def callback_button(call):
+    bot.answer_callback_query(call.id)  # Только подтверждение без текста
 
 if __name__ == '__main__':
+    print("Удаляю старый вебхук...")
     bot.remove_webhook()
-    bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH)
-    # НЕ вызываем app.run() при запуске под gunicorn
+    print("Устанавливаю новый вебхук...")
+    success = bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH)
+    if success:
+        print("Вебхук успешно установлен.")
+    else:
+        print("Ошибка при установке вебхука.")
