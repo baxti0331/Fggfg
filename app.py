@@ -9,8 +9,9 @@ if not API_TOKEN:
 bot = telebot.TeleBot(API_TOKEN)
 app = Flask(__name__)
 
-WEBHOOK_URL_BASE = 'https://render-webhuk-test.onrender.com'  # Твой публичный URL от Render
-WEBHOOK_URL_PATH = f"/{API_TOKEN}/"
+clean_token = API_TOKEN.replace(':', '')
+WEBHOOK_URL_BASE = 'https://fggfg.onrender.com'
+WEBHOOK_URL_PATH = f"/{clean_token}/"
 
 @app.route('/')
 def index():
@@ -39,4 +40,4 @@ if __name__ == '__main__':
         print("Вебхук успешно установлен.")
     else:
         print("Ошибка при установке вебхука.")
-    app.run(host='0.0.0.0', port=8080)
+    # Не запускаем app.run(), чтобы gunicorn мог управлять сервером
