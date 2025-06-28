@@ -10,7 +10,7 @@ bot = telebot.TeleBot(API_TOKEN)
 app = Flask(__name__)
 
 clean_token = API_TOKEN.replace(':', '')
-WEBHOOK_URL_BASE = 'https://fggfg.onrender.com'
+WEBHOOK_URL_BASE ='https://fggfg-1.onrender.com'
 WEBHOOK_URL_PATH = f"/{clean_token}/"
 
 @app.route('/')
